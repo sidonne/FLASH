@@ -1,20 +1,32 @@
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
-import javax.swing.JFrame;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
-
-import java.util.*;
-import java.awt.Font;
 
 
 class NotEnoughUnitsException extends Exception{
@@ -661,6 +673,70 @@ class Shop {
 	}
 }
 
+class Menu {
+	JMenuBar menuBar;
+	JMenu menu, submenu;
+	JMenuItem menuItem;
+	JFrame frame;
+	private JMenuBar theJMenuBar;
+	
+	Menu () {
+		initialize ();
+	}
+	
+	private void initialize () {
+
+		{
+
+	//Create the menu bar.
+	menuBar = new JMenuBar();
+
+	//Build the first menu.
+	menu = new JMenu("Admin panel");
+	menu.setMnemonic(KeyEvent.VK_A);
+	menu.getAccessibleContext().setAccessibleDescription(
+	        "The only menu in this program that has menu items");
+	menuBar.add(menu);
+
+	//a group of JMenuItems
+	menuItem = new JMenuItem("Add Book",KeyEvent.VK_T);
+	menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
+	menuItem.getAccessibleContext().setAccessibleDescription("This doesn't really do anything");
+	menu.add(menuItem);
+
+	menuItem = new JMenuItem("Delete Book",KeyEvent.VK_T);
+	menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.ALT_MASK));
+	menuItem.getAccessibleContext().setAccessibleDescription("This doesn't really do anything");
+	menu.add(menuItem);
+
+
+	//a submenu
+	menu.addSeparator();
+	submenu = new JMenu("More Options");
+	submenu.setMnemonic(KeyEvent.VK_S);
+
+	menuItem = new JMenuItem("An item in the submenu");
+	menuItem.setAccelerator(KeyStroke.getKeyStroke(
+	        KeyEvent.VK_2, ActionEvent.ALT_MASK));
+	submenu.add(menuItem);
+
+	menuItem = new JMenuItem("Another item");
+	submenu.add(menuItem);
+	menu.add(submenu);
+
+	//Build second menu in the menu bar.
+	menu = new JMenu("Another Menu");
+	menu.setMnemonic(KeyEvent.VK_N);
+	menu.getAccessibleContext().setAccessibleDescription(
+	        "This menu does nothing");
+	menuBar.add(menu);
+
+	
+	frame.setJMenuBar(theJMenuBar);
+		}
+	}
+}
+
 class Owner {
 	JFrame frame;
 	private JTextField productNameOwner;
@@ -996,6 +1072,71 @@ class CheckOut {
 	}
 }
 
+class Client1 {
+	   JFrame frame;
+	private Component panel;
+		private static JLabel password1, label;
+		private static JTextField username;
+		private static JButton button;
+		private static JPasswordField Password;
+		
+		public Client1() {
+			initialize();
+		}
+		
+		private void initialize() {
+			JFrame frame = new JFrame();
+			frame.setTitle("LOGIN PAGE");
+			frame.setLocation(new Point(500, 300));
+			frame.add(panel);
+			frame.setSize(new Dimension(400, 200));
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			
+			JPanel panel = new JPanel();
+			panel.setLayout(null);
+			
+			// Username label constructor
+			label = new JLabel("Username");
+			label.setBounds(100, 8, 70, 20);
+			panel.add(label);
+			
+			// Username TextField constructor
+			username = new JTextField();
+			username.setBounds(100, 27, 193, 28);
+			panel.add(username);
+			
+			// Password Label constructor
+			password1 = new JLabel("Password");
+			password1.setBounds(100, 55, 70, 20);
+			panel.add(password1);
+			
+			// Password TextField
+			Password = new JPasswordField();
+			Password.setBounds(100, 75, 193, 28);
+			panel.add(Password);
+			
+			// Button constructor
+			button = new JButton("Login");
+			button.setBounds(100, 110, 90, 25);
+			button.setForeground(Color.WHITE);
+			button.setBackground(Color.BLACK);
+			button.addActionListener((ActionListener) new Client1());
+			panel.add(button);
+			
+			// Imlementing an action event listener class with conditional statement
+		}
+			public void actionPerformed(ActionEvent e) {
+				String Username = username.getText();
+				String Password1 = Password.getText();
+
+				if (Username.equals("Client") && Password1.equals("123"))
+					JOptionPane.showMessageDialog(null, "Login Successful");
+				else
+					JOptionPane.showMessageDialog(null, "Username or Password mismatch ");
+			}
+
+		}
+
 class Client {
 	JFrame frame;
 	private JTextField itemNameText;
@@ -1294,9 +1435,9 @@ class Auth {
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(adminPasswd.equals(passwdField.getText())) {
-					Owner window1 = new Owner();
+					Menu window1 = new Menu();
 					errorMessage.setText("");
-					window1.frame.setVisible(true);		
+					((Window) window1.frame).setVisible(true);		
 					frame.setVisible(false);
 				}else {
 					errorMessage.setText("Invalid Password");
@@ -1324,12 +1465,12 @@ public class BookStoreGUI {
 		BookStoreGUI b = new BookStoreGUI();
 
 		ArrayList<Items> items = new ArrayList<Items>();
-		items.add(new NewsPaper("N1", 10, 10, "Times of India"));
-		items.add(new Book("B1", 200, 5, "B1234"));
-		items.add(new Stationary("S1", 5, 100, "Cello"));
+		items.add(new NewsPaper("Reseau du Francais", 5000, 10, "French"));
+		items.add(new Book("Gateway to English", 4500, 15, "English"));
+		items.add(new Stationary("Mathematics for Pupils", 6000, 30, "Mathematics"));
 
 		Customer c = new Customer("Sourabh");
-		Shop s1 = Shop.getinstance("Ravindra Cloth Centre", "Bijapur", "Nitinkumar Jain", 10, items);
+		Shop s1 = Shop.getinstance("The SOLUTION", "Yaounde,Ngoa-Ekele", "Dominatrist", 10, items);
 		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -1359,10 +1500,10 @@ public class BookStoreGUI {
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
-		JButton btnClient = new JButton("Client");
+		JButton btnClient = new JButton("CLIENT");
 		btnClient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Client window1 = new Client();
+				Client1 window1 = new Client1();
 				window1.frame.setVisible(true);
 			}
 		});
